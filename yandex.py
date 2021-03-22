@@ -1,6 +1,6 @@
 import requests
 
-token = input()
+token = 'AgAAAAATdS1xAADLWzHrhreCWkdanreXl-ZdUQE'
 
 
 class YaUploader:
@@ -10,7 +10,12 @@ class YaUploader:
     def upload(self, file_path: str):
             resp = requests.get('https://cloud-api.yandex.net/v1/disk/resources/upload', params={'path': file_path},
                                 headers={'Authorization': f'OAuth {self.token}'})
-            return resp.json()
+            result = resp.json()
+            if 'href' in result:
+                response = requests.put(result['href'], params={'path': file_path})
+                return response.json()
+            else:
+                return result
 
 
 uploader = YaUploader(token)
